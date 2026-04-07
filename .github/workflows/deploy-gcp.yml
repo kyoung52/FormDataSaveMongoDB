@@ -1,9 +1,9 @@
- name: Deploy to Google App Engine
+name: Deploy to Google App Engine
 
 on:
   push:
     branches:
-      - main   # make sure this matches your branch!
+      - master   # make sure this matches your branch!
 
 jobs:
   deploy:
