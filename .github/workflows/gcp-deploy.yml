@@ -3,39 +3,33 @@ name: Deploy to Google App Engine
 on:
   push:
     branches:
-      - master   # make sure this matches your branch!
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Updated to v4
 
-      # 2. Set up Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # Updated to v4
         with:
-          node-version: '18'
+          node-version: '20' # Matches your app.yaml runtime
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Authenticate to Google Cloud
+      # NOTE: Ensure GCP_SA_KEY is the FULL JSON key from your Service Account
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      # 5. Setup gcloud SDK
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Deploy to App Engine
+        uses: google-github-actions/deploy-appengine@v2 # More efficient than manual gcloud command
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-      # 6. Deploy to App Engine
-      - name: Deploy
-        run: gcloud app deploy app.yaml --quiet 
+          deliverables: app.yaml
+          promote: true
