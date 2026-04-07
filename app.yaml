@@ -1,4 +1,9 @@
 runtime: nodejs20
 
+# NEW: This tells App Engine which file starts the server
+entrypoint: node bin/www
+
+# Optional: Limits cost and prevents the "20 instance" warning
 automatic_scaling:
+  min_instances: 0
   max_instances: 5
